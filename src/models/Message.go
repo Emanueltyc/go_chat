@@ -10,8 +10,6 @@ type Message struct {
 	Content    string    `bson:"content" json:"content" validate:"required"`
 	Chat       string    `bson:"chat_id" json:"chat_id" validate:"required"`
 	CreatedAt  time.Time `bson:"created_at" json:"created_at"`
-	
-	SenderData User      `bson:"sender_data,omitempty" json:"sender"`
 }
 
 func NewMessage(sender string, Content string, chat string) *Message {

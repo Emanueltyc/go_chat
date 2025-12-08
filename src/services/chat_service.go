@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"go_chat/src/dto"
 	"go_chat/src/models"
 	"go_chat/src/repositories"
 	"strings"
@@ -34,7 +35,7 @@ func (s *ChatService) Find(ctx context.Context, pipeline mongo.Pipeline) (*model
 	return s.repo.Find(ctx, pipeline)
 }
 
-func (s *ChatService) FindMany(ctx context.Context, pipeline mongo.Pipeline) (*[]models.Chat, error) {
+func (s *ChatService) FindMany(ctx context.Context, pipeline mongo.Pipeline) (*[]dto.ChatDTO, error) {
 	return s.repo.FindMany(ctx, pipeline)
 }
 

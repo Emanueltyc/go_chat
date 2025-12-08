@@ -140,30 +140,30 @@ func (c *ChatController) FetchChats(w http.ResponseWriter, r *http.Request) {
 			{Key: "from", Value: "users"},
 			{Key: "localField", Value: "users"},
 			{Key: "foreignField", Value: "_id"},
-			{Key: "as", Value: "users_data"},
+			{Key: "as", Value: "users"},
 		}}},
 
-		bson.D{{Key: "$lookup", Value: bson.D{
+		{{Key: "$lookup", Value: bson.D{
 			{Key: "from", Value: "messages"},
 			{Key: "localField", Value: "latest_message_id"},
 			{Key: "foreignField", Value: "_id"},
-			{Key: "as", Value: "latest_message_data"},
+			{Key: "as", Value: "latest_message"},
 		}}},
 
 		bson.D{{Key: "$unwind", Value: bson.D{
-			{Key: "path", Value: "$latest_message_data"},
+			{Key: "path", Value: "$latest_message"},
 			{Key: "preserveNullAndEmptyArrays", Value: false},
 		}}},
 
 		bson.D{{Key: "$lookup", Value: bson.D{
 			{Key: "from", Value: "users"},
-			{Key: "localField", Value: "latest_message_data.sender_id"},
+			{Key: "localField", Value: "latest_message.sender_id"},
 			{Key: "foreignField", Value: "_id"},
-			{Key: "as", Value: "sender_data"},
+			{Key: "as", Value: "latest_message.sender"},
 		}}},
 
 		bson.D{{Key: "$unwind", Value: bson.D{
-			{Key: "path", Value: "$sender_data"},
+			{Key: "path", Value: "$latest_message.sender"},
 			{Key: "preserveNullAndEmptyArrays", Value: false},
 		}}},
 

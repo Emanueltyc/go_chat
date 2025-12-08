@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"context"
+	"go_chat/src/dto"
 	"go_chat/src/models"
 	"log"
 
@@ -92,7 +93,7 @@ func (r *ChatRepository) Find(ctx context.Context, pipeline mongo.Pipeline) (*mo
 	return &chat, nil
 }
 
-func (r *ChatRepository) FindMany(ctx context.Context, pipeline mongo.Pipeline) (*[]models.Chat, error) {
+func (r *ChatRepository) FindMany(ctx context.Context, pipeline mongo.Pipeline) (*[]dto.ChatDTO, error) {
 	cursor, err := r.collection.Aggregate(ctx, pipeline)
 	if err != nil {
 		return nil, err
@@ -102,13 +103,10 @@ func (r *ChatRepository) FindMany(ctx context.Context, pipeline mongo.Pipeline) 
 		return nil, nil
 	}
 
-	var chats []models.Chat
+	var chats []dto.ChatDTO
 
-	if err = cursor.All(ctx, &chats); err != nil { /* handle error */
-	}
-
-	if len(chats) == 0 {
-		return nil, nil
+	if err = cursor.All(ctx, &chats); err != nil {
+		return nil, err
 	}
 
 	return &chats, nil
