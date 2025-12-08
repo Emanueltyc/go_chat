@@ -2,7 +2,6 @@ package middlewares
 
 import (
 	"context"
-	"fmt"
 	"go_chat/src/types"
 	"log"
 	"net/http"
@@ -37,7 +36,7 @@ func Protect(next http.HandlerFunc) http.HandlerFunc {
 				next.ServeHTTP(w, r)
 				return
 			} else {
-				fmt.Println(err)
+				log.Println(err)
 				http.Error(w, "Not authorized, token failed!", http.StatusUnauthorized)
 				return
 			}

@@ -53,8 +53,19 @@ func (c *UserController) Register(w http.ResponseWriter, r *http.Request) {
 
 	user, err := c.service.FindByEmail(context.Background(), registerRequest.Email)
 
-	if err != nil && user != nil {
+	if err != nil {
 		http.Error(w, "Error decoding JSON: "+err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	if user != nil {
+		w.WriteHeader(http.StatusBadRequest)
+
+		json.NewEncoder(w).Encode(map[string]any{
+			"status":  "error",
+			"message": "Email is already in use",
+		})
+
 		return
 	}
 
@@ -77,7 +88,8 @@ func (c *UserController) Register(w http.ResponseWriter, r *http.Request) {
 
 	token, err := c.service.GenerateToken(newUser)
 	if err != nil {
-		log.Fatal()
+		http.Error(w, "There was an error trying to generate the token", http.StatusBadRequest)
+		return
 	}
 
 	json.NewEncoder(w).Encode(map[string]any{

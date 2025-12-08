@@ -21,7 +21,7 @@ func NewChatRepository(db *mongo.Database) *ChatRepository {
 	}
 }
 
-func (r *ChatRepository) Create(ctx context.Context, chat *models.Chat) (*models.Chat, error) {
+func (r *ChatRepository) Create(ctx context.Context, chat *models.Chat) (*dto.ChatDTO, error) {
 	result, err := r.collection.InsertOne(ctx, chat)
 	if err != nil {
 		log.Print(err)
@@ -34,7 +34,7 @@ func (r *ChatRepository) Create(ctx context.Context, chat *models.Chat) (*models
 			{Key: "from", Value: "users"},
 			{Key: "localField", Value: "users"},
 			{Key: "foreignField", Value: "_id"},
-			{Key: "as", Value: "users_data"},
+			{Key: "as", Value: "users"},
 		}}},
 	}
 
@@ -47,7 +47,7 @@ func (r *ChatRepository) Create(ctx context.Context, chat *models.Chat) (*models
 		return nil, nil
 	}
 
-	var newChat models.Chat
+	var newChat dto.ChatDTO
 
 	err = cursor.Decode(&newChat)
 	if err != nil {
@@ -72,7 +72,7 @@ func (r *ChatRepository) FindByID(ctx context.Context, chatID string) (*models.C
 	return &chat, nil
 }
 
-func (r *ChatRepository) Find(ctx context.Context, pipeline mongo.Pipeline) (*models.Chat, error) {
+func (r *ChatRepository) Find(ctx context.Context, pipeline mongo.Pipeline) (*dto.ChatDTO, error) {
 	cursor, err := r.collection.Aggregate(ctx, pipeline)
 
 	if err != nil {
@@ -83,7 +83,7 @@ func (r *ChatRepository) Find(ctx context.Context, pipeline mongo.Pipeline) (*mo
 		return nil, nil
 	}
 
-	var chat models.Chat
+	var chat dto.ChatDTO
 
 	err = cursor.Decode(&chat)
 	if err != nil {

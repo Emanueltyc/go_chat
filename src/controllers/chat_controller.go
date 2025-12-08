@@ -62,36 +62,30 @@ func (c *ChatController) AccessChat(w http.ResponseWriter, r *http.Request) {
 			{Key: "from", Value: "users"},
 			{Key: "localField", Value: "users"},
 			{Key: "foreignField", Value: "_id"},
-			{Key: "as", Value: "users_data"},
+			{Key: "as", Value: "users"},
 		}}},
 
-		bson.D{{Key: "$lookup", Value: bson.D{
+		{{Key: "$lookup", Value: bson.D{
 			{Key: "from", Value: "messages"},
 			{Key: "localField", Value: "latest_message_id"},
 			{Key: "foreignField", Value: "_id"},
-			{Key: "as", Value: "latest_message_data"},
+			{Key: "as", Value: "latest_message"},
 		}}},
 
 		bson.D{{Key: "$unwind", Value: bson.D{
-			{Key: "path", Value: "$latest_message_data"},
+			{Key: "path", Value: "$latest_message"},
 			{Key: "preserveNullAndEmptyArrays", Value: false},
 		}}},
 
 		bson.D{{Key: "$lookup", Value: bson.D{
 			{Key: "from", Value: "users"},
-			{Key: "let", Value: bson.D{{Key: "sender_id", Value: "$latest_message_data.sender_id"}}},
-			{Key: "pipeline", Value: mongo.Pipeline{
-				bson.D{{Key: "$match", Value: bson.D{
-					{Key: "$expr", Value: bson.D{
-						{Key: "$eq", Value: bson.A{"$_id", "$$sender_id"}},
-					}},
-				}}},
-			}},
-			{Key: "as", Value: "latest_message_data.sender_data"},
+			{Key: "localField", Value: "latest_message.sender_id"},
+			{Key: "foreignField", Value: "_id"},
+			{Key: "as", Value: "latest_message.sender"},
 		}}},
 
 		bson.D{{Key: "$unwind", Value: bson.D{
-			{Key: "path", Value: "$latest_message_data.sender_data"},
+			{Key: "path", Value: "$latest_message.sender"},
 			{Key: "preserveNullAndEmptyArrays", Value: false},
 		}}},
 	}
@@ -103,13 +97,13 @@ func (c *ChatController) AccessChat(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if chat == nil {
-		chat = &models.Chat{
+		newChat := &models.Chat{
 			Name:        "sender",
 			IsGroupChat: false,
 			Users:       []string{userID, receiverID},
 		}
 
-		chat, err = c.service.Create(context.Background(), chat)
+		chat, err = c.service.Create(context.Background(), newChat)
 		if err != nil {
 			http.Error(w, "Error: "+err.Error(), http.StatusBadRequest)
 			return

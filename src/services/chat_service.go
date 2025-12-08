@@ -22,7 +22,7 @@ func NewChatService(repo *repositories.ChatRepository) *ChatService {
     }
 }
 
-func (s *ChatService) Create(ctx context.Context, chat *models.Chat) (*models.Chat, error) {
+func (s *ChatService) Create(ctx context.Context, chat *models.Chat) (*dto.ChatDTO, error) {
 	id := strings.ReplaceAll(uuid.New().String(), "-", "")
 	
 	chat.ID = id
@@ -31,7 +31,7 @@ func (s *ChatService) Create(ctx context.Context, chat *models.Chat) (*models.Ch
 	return s.repo.Create(ctx, chat)
 }
 
-func (s *ChatService) Find(ctx context.Context, pipeline mongo.Pipeline) (*models.Chat, error) {
+func (s *ChatService) Find(ctx context.Context, pipeline mongo.Pipeline) (*dto.ChatDTO, error) {
 	return s.repo.Find(ctx, pipeline)
 }
 
