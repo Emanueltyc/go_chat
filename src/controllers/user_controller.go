@@ -182,7 +182,7 @@ func (c *UserController) SearchUsers(w http.ResponseWriter, r *http.Request) {
 	users, err := c.service.SearchUsers(context.Background(), filter)
 
 	if err != nil {
-		http.Error(w, "Error decoding JSON: "+err.Error(), http.StatusBadRequest)
+		http.Error(w, "There was an error while searching the users", http.StatusBadRequest)
 		return
 	}
 
