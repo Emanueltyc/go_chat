@@ -24,13 +24,14 @@ func main() {
 	
 	messageRepo := repositories.NewMessageRepository(db)
 	messageService := services.NewMessageService(messageRepo)
+	messageController := controllers.NewMessageController(messageService)
 
 	hub := ws.NewHub(messageService, chatService)
 	go hub.Run()
 
 	router := http.NewServeMux()
 
-	routes.RegisterRoutes(router, userController, chatController, hub)
+	routes.RegisterRoutes(router, userController, chatController, messageController, hub)
 
 	http.Handle("/api/", http.StripPrefix("/api", router))
 

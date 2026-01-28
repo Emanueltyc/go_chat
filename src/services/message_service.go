@@ -28,3 +28,9 @@ func (s *MessageService) Create(ctx context.Context, message *models.Message) (*
 	
 	return s.repo.Create(ctx, message)
 }
+
+func (s *MessageService) Fetch(ctx context.Context, userId string, chatId string, limit int64, offset int64) (*[]models.Message, error) {
+	limit = min(limit, 100)
+	
+	return s.repo.GetMessages(ctx, chatId, limit, offset)
+}

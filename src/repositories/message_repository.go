@@ -40,8 +40,8 @@ func (r *MessageRepository) Create(ctx context.Context, message *models.Message)
 	return &newMessage, nil
 }
 
-func (r *MessageRepository) GetMessages(ctx context.Context, chatID string, limit int64) ([]models.Message, error) {
-	cursor, err := r.collection.Find(ctx, bson.M{"chat_id": chatID}, options.Find().SetLimit(limit))
+func (r *MessageRepository) GetMessages(ctx context.Context, chatID string, limit int64, offset int64) (*[]models.Message, error) {
+	cursor, err := r.collection.Find(ctx, bson.M{"chat_id": chatID}, options.Find().SetLimit(limit).SetSkip(offset * limit))
 
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
@@ -52,7 +52,7 @@ func (r *MessageRepository) GetMessages(ctx context.Context, chatID string, limi
 
 	defer cursor.Close(ctx)
 
-	var messages []models.Message
+	var messages *[]models.Message
 	if err = cursor.All(ctx, &messages); err != nil { /* handle error */
 	}
 
