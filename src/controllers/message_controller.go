@@ -47,7 +47,7 @@ func (c *MessageController) Fetch(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 
 		json.NewEncoder(w).Encode(map[string]any{
-			"message": "parameter limit must be a valid integer number!",
+			"message": "parameter chatId is required!",
 		})
 
 		return
