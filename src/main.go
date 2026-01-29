@@ -23,7 +23,7 @@ func main() {
 	chatController := controllers.NewChatController(chatService)
 	
 	messageRepo := repositories.NewMessageRepository(db)
-	messageService := services.NewMessageService(messageRepo)
+	messageService := services.NewMessageService(messageRepo, chatRepo)
 	messageController := controllers.NewMessageController(messageService)
 
 	hub := ws.NewHub(messageService, chatService)

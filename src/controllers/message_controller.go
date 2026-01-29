@@ -85,7 +85,7 @@ func (c *MessageController) Fetch(w http.ResponseWriter, r *http.Request) {
 
 	messages, err := c.service.Fetch(context.Background(), userID, chatId, limit, offset)
 	if err != nil {
-		http.Error(w, "There was an error while fetching the messages", http.StatusBadRequest)
+		http.Error(w, "There was an error while fetching the messages: " + err.Error(), http.StatusBadRequest)
 		return
 	}
 
