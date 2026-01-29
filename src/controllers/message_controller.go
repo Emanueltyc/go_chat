@@ -27,65 +27,57 @@ func (c *MessageController) Fetch(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	var chatId string
 	var limit int64 = 0
 	var offset int64 = 0
+	var errors = make([]string, 3)
 
 	values, ok := r.URL.Query()["chatId"]
-	if !ok {
-		w.WriteHeader(http.StatusBadRequest)
+	if ok {
+		chatId := values[0]
 
-		json.NewEncoder(w).Encode(map[string]any{
-			"message": "parameter chatId is required!",
-		})
-
-		return
-	}
-
-	chatId := values[0]
-
-	if chatId == "" {
-		w.WriteHeader(http.StatusBadRequest)
-
-		json.NewEncoder(w).Encode(map[string]any{
-			"message": "parameter chatId is required!",
-		})
-
-		return
+		if chatId == "" {
+			errors = append(errors, "parameter chatId is required!")
+		}
+	} else {
+		errors = append(errors, "parameter chatId is required!")
 	}
 
 	if limitStr := r.URL.Query().Get("limit"); limitStr != "" {
 		parsed, err := strconv.ParseInt(limitStr, 10, 64)
 		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
-
-			json.NewEncoder(w).Encode(map[string]any{
-				"message": "parameter limit must be a valid integer number!",
-			})
-
-			return
+			errors = append(errors, "parameter limit must be a valid integer number!")
+		} else {
+			limit = parsed
 		}
-
-		limit = parsed
+	} else {
+		errors = append(errors, "parameter limit must be a valid integer number!")
 	}
 
 	if offsetStr := r.URL.Query().Get("offset"); offsetStr != "" {
 		parsed, err := strconv.ParseInt(offsetStr, 10, 64)
 		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
-
-			json.NewEncoder(w).Encode(map[string]any{
-				"message": "parameter offset must be a valid integer number!",
-			})
-
-			return
+			errors = append(errors, "parameter offset must be a valid integer number!")
+		} else {
+			offset = parsed
 		}
+	} else {
+		errors = append(errors, "parameter offset must be a valid integer number!")
+	}
 
-		offset = parsed
+	if len(errors) > 0 {
+		w.WriteHeader(http.StatusBadRequest)
+
+		json.NewEncoder(w).Encode(map[string]any{
+			"message": errors,
+		})
+
+		return
 	}
 
 	messages, err := c.service.Fetch(context.Background(), userID, chatId, limit, offset)
 	if err != nil {
-		http.Error(w, "There was an error while fetching the messages: " + err.Error(), http.StatusBadRequest)
+		http.Error(w, "There was an error while fetching the messages: "+err.Error(), http.StatusBadRequest)
 		return
 	}
 
