@@ -38,10 +38,10 @@ func (r *UserRepository) Create(ctx context.Context, user *models.User) (*models
 	return &newUser, nil
 }
 
-func (r *UserRepository) Find(ctx context.Context, email string) (*models.User, error) {
+func (r *UserRepository) Find(ctx context.Context, filter bson.M) (*models.User, error) {
 	var user models.User
 
-	err := r.collection.FindOne(ctx, bson.M{"email": email}).Decode(&user)
+	err := r.collection.FindOne(ctx, filter).Decode(&user)
 
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
