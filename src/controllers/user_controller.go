@@ -51,7 +51,7 @@ func (c *UserController) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := c.service.FindByEmail(context.Background(), registerRequest.Email)
+	user, err := c.service.Find(context.Background(), bson.M{"email": registerRequest.Email})
 
 	if err != nil {
 		http.Error(w, "Error decoding JSON: "+err.Error(), http.StatusBadRequest)
@@ -110,7 +110,7 @@ func (c *UserController) AuthUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := c.service.FindByEmail(context.Background(), authRequest.Email)
+	user, err := c.service.Find(context.Background(), bson.M{"email": authRequest.Email})
 
 	if err != nil {
 		log.Fatal()

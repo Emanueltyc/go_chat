@@ -39,8 +39,8 @@ func (s *UserService) Register(ctx context.Context, user *models.User) (*models.
 	return s.repo.Create(ctx, user)
 }
 
-func (s *UserService) FindByEmail(ctx context.Context, email string) (*models.User, error) {
-	return s.repo.Find(ctx, bson.M{"email": email})
+func (s *UserService) Find(ctx context.Context, filter bson.M) (*models.User, error) {
+	return s.repo.Find(ctx, filter)
 }
 
 func (s *UserService) MatchPassword(user *models.User, password string) bool {
