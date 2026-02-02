@@ -11,6 +11,7 @@ func RegisterRoutes(r *http.ServeMux, uc *controllers.UserController, cc *contro
 	r.HandleFunc("GET /user/", middlewares.Protect(uc.SearchUsers))
 	r.HandleFunc("POST /user/", uc.Register)
 	r.HandleFunc("POST /user/login", uc.AuthUser)
+	r.HandleFunc("GET /user/info", uc.Info)
 
 	r.HandleFunc("POST /chat/", middlewares.Protect(cc.AccessChat))
 	r.HandleFunc("GET /chat/", middlewares.Protect(cc.FetchChats))

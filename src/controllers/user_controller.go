@@ -4,8 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"go_chat/src/dto"
 	"go_chat/src/models"
 	"go_chat/src/services"
+	"go_chat/src/types"
 	"log"
 	"net/http"
 	"strings"
@@ -149,6 +151,25 @@ func (c *UserController) AuthUser(w http.ResponseWriter, r *http.Request) {
 		"user":  user,
 		"token": token,
 	})
+}
+
+func (c *UserController) Info(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	const userContextKey types.ContextJWTClaimKey = "userID"
+
+	userID, ok := r.Context().Value(userContextKey).(string)
+	if !ok {
+		return
+	}
+
+	user, err := c.service.Find(context.Background(), bson.M{"id": userID})
+	if err != nil {
+		http.Error(w, "There was an error while searching the user info", http.StatusBadRequest)
+		return
+	}
+
+	json.NewEncoder(w).Encode(dto.NewUserDTO(user))
 }
 
 func (c *UserController) SearchUsers(w http.ResponseWriter, r *http.Request) {
