@@ -1,6 +1,7 @@
 package dto
 
 import (
+	"go_chat/src/models"
 	"time"
 )
 
@@ -28,4 +29,14 @@ type UserDTO struct {
 	Email     string    `bson:"email" json:"email" validate:"required,email"`
 	Picture   string    `bson:"picture" json:"picture"`
 	CreatedAt time.Time `bson:"created_at" json:"created_at"`
+}
+
+func NewUserDTO(u *models.User) *UserDTO {
+	return &UserDTO{
+		ID: u.ID,
+		Name: u.Name,
+		Email: u.Email,
+		Picture: u.Picture,
+		CreatedAt: u.CreatedAt,		
+	}
 }
