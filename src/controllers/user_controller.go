@@ -163,7 +163,7 @@ func (c *UserController) Info(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := c.service.Find(context.Background(), bson.M{"id": userID})
+	user, err := c.service.Find(context.Background(), bson.M{"_id": userID})
 	if err != nil {
 		http.Error(w, "There was an error while searching the user info", http.StatusBadRequest)
 		return
