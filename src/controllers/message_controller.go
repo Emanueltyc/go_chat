@@ -30,11 +30,11 @@ func (c *MessageController) Fetch(w http.ResponseWriter, r *http.Request) {
 	var chatId string
 	var limit int64 = 0
 	var offset int64 = 0
-	var errors = make([]string, 3)
+	var errors []string
 
 	values, ok := r.URL.Query()["chatId"]
 	if ok {
-		chatId := values[0]
+		chatId = values[0]
 
 		if chatId == "" {
 			errors = append(errors, "parameter chatId is required!")
