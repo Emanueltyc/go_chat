@@ -88,15 +88,16 @@ func (c *UserController) Register(w http.ResponseWriter, r *http.Request) {
 		})
 	}
 
-	token, err := c.service.GenerateToken(newUser)
+	token, exp, err := c.service.GenerateToken(newUser)
 	if err != nil {
 		http.Error(w, "There was an error trying to generate the token", http.StatusBadRequest)
 		return
 	}
 
 	json.NewEncoder(w).Encode(map[string]any{
-		"user":  newUser,
-		"token": token,
+		"user":       newUser,
+		"token":      token,
+		"expires_at": exp,
 	})
 }
 
@@ -140,7 +141,7 @@ func (c *UserController) AuthUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, err := c.service.GenerateToken(user)
+	token, exp, err := c.service.GenerateToken(user)
 
 	if err != nil {
 		http.Error(w, "Error: "+err.Error(), http.StatusBadRequest)
@@ -148,8 +149,9 @@ func (c *UserController) AuthUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	json.NewEncoder(w).Encode(map[string]any{
-		"user":  user,
-		"token": token,
+		"user":       user,
+		"token":      token,
+		"expires_at": exp,
 	})
 }
 

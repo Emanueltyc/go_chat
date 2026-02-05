@@ -48,16 +48,14 @@ func (s *UserService) MatchPassword(user *models.User, password string) bool {
 	return err == nil
 }
 
-func (s *UserService) GenerateToken(user *models.User) (string, error) {
+func (s *UserService) GenerateToken(user *models.User) (string, *time.Time, error) {
 	secret := []byte(os.Getenv("JWT_SECRET"))
 
+	exp := time.Now().Add(time.Hour * 24)
+
 	claims := jwt.MapClaims{
-		"id":    user.ID,
-		"name":  user.Name,
-		"email": user.Email,
-		"picture": user.Picture,
-		"createdAt": user.CreatedAt,
-		"exp": time.Now().Add(time.Hour * 24).Unix(),
+		"id":  user.ID,
+		"exp": exp.Unix(),
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -65,10 +63,10 @@ func (s *UserService) GenerateToken(user *models.User) (string, error) {
 	tokenString, err := token.SignedString([]byte(secret))
 
 	if err != nil {
-		return "", nil
+		return "", nil, nil
 	}
 
-	return tokenString, nil
+	return tokenString, &exp, nil
 }
 
 func (s *UserService) SearchUsers(ctx context.Context, filter bson.M) (*[]models.User, error) {
