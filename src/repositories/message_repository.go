@@ -52,9 +52,10 @@ func (r *MessageRepository) GetMessages(ctx context.Context, chatID string, limi
 
 	defer cursor.Close(ctx)
 
-	var messages *[]models.Message
-	if err = cursor.All(ctx, &messages); err != nil { /* handle error */
+	var messages []models.Message
+	if err = cursor.All(ctx, &messages); err != nil {
+		return nil, err
 	}
 
-	return messages, nil
+	return &messages, nil
 }
