@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"go_chat/src/dto"
 	"go_chat/src/models"
 	"go_chat/src/services"
 	"go_chat/src/types"
@@ -171,7 +170,7 @@ func (c *UserController) Info(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	json.NewEncoder(w).Encode(dto.NewUserDTO(user))
+	json.NewEncoder(w).Encode(user)
 }
 
 func (c *UserController) SearchUsers(w http.ResponseWriter, r *http.Request) {
