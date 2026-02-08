@@ -57,6 +57,15 @@ func (r *ChatRepository) Create(ctx context.Context, chat *models.Chat) (*dto.Ch
 	return &newChat, nil
 }
 
+func (r *ChatRepository) UpdateByID(ctx context.Context, chatID string, update any) error {
+	_, err := r.collection.UpdateByID(ctx, chatID, update)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (r *ChatRepository) FindByID(ctx context.Context, chatID string) (*models.Chat, error) {
 	var chat models.Chat
 
