@@ -54,7 +54,7 @@ func (c *Client) ReadPump() {
 			return
 		}
 
-		_, err = c.Hub.MessageService.Create(context.Background(), newMessage.Message)
+		err = c.Hub.MessageService.Create(context.Background(), newMessage.Message)
 		if err != nil {
 			log.Println("There was an error trying to create the message: ", err)
 			break

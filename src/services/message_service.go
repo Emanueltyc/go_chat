@@ -10,27 +10,33 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 type MessageService struct {
-	repo *repositories.MessageRepository
+	repo     *repositories.MessageRepository
 	chatRepo *repositories.ChatRepository
 }
 
 func NewMessageService(repo *repositories.MessageRepository, chatRepo *repositories.ChatRepository) *MessageService {
-    return &MessageService{
-        repo: repo,
+	return &MessageService{
+		repo:     repo,
 		chatRepo: chatRepo,
-    }
+	}
 }
 
-func (s *MessageService) Create(ctx context.Context, message *models.Message) (*models.Message, error) {
+func (s *MessageService) Create(ctx context.Context, message *models.Message) error {
 	id := strings.ReplaceAll(uuid.New().String(), "-", "")
-	
+
 	message.ID = id
 	message.CreatedAt = time.Now()
-	
-	return s.repo.Create(ctx, message)
+
+	message, err := s.repo.Create(ctx, message)
+	if err != nil {
+		return err
+	}
+
+	return s.chatRepo.UpdateByID(ctx, message.Chat, bson.D{{Key: "$set", Value: bson.D{{Key: "latest_message_id", Value: message.ID}}}})
 }
 
 func (s *MessageService) Fetch(ctx context.Context, userId string, chatId string, limit int64, offset int64) (*[]models.Message, error) {
