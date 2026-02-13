@@ -68,9 +68,10 @@ func (h *Hub) sendToChatMembers(payload *types.WebsocketMessage) {
 	}
 
 	for _, userID := range users {
-		client := h.Clients[userID]
-		if client.UserID != payload.Message.Sender {
-			client.Send <- jsonPayload
+		if client, ok := h.Clients[userID]; ok {
+			if client.UserID != payload.Message.Sender {
+				client.Send <- jsonPayload
+			}
 		}
 	}
 }
