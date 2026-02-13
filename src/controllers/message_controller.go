@@ -83,5 +83,8 @@ func (c *MessageController) Fetch(w http.ResponseWriter, r *http.Request) {
 
 	json.NewEncoder(w).Encode(map[string]any{
 		"messages": messages,
+		"total": len(*messages),
+		"offset": offset,
+		"limit": min(100, limit),
 	})
 }
