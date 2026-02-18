@@ -1,6 +1,7 @@
 package dto
 
 import (
+	"go_chat/src/models"
 	"time"
 )
 
@@ -28,4 +29,11 @@ type UserDTO struct {
 	Email     string    `bson:"email" json:"email" validate:"required,email"`
 	Picture   string    `bson:"picture" json:"picture"`
 	CreatedAt time.Time `bson:"created_at" json:"created_at"`
+}
+
+type MessageResponseDTO struct {
+	Messages []models.Message `json:"messages"`
+	Total    int              `json:"total"`
+	Offset   int64            `json:"offset"`
+	Limit    int64            `json:"limit"`
 }

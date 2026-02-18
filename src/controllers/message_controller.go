@@ -3,6 +3,7 @@ package controllers
 import (
 	"context"
 	"encoding/json"
+	"go_chat/src/dto"
 	"go_chat/src/services"
 	"go_chat/src/types"
 	"net/http"
@@ -81,10 +82,10 @@ func (c *MessageController) Fetch(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	json.NewEncoder(w).Encode(map[string]any{
-		"messages": messages,
-		"total": len(*messages),
-		"offset": offset,
-		"limit": min(100, limit),
+	json.NewEncoder(w).Encode(dto.MessageResponseDTO{
+		Messages: *messages,
+		Total:    len(*messages),
+		Offset:   offset,
+		Limit:    min(100, limit),
 	})
 }
