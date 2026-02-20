@@ -3,7 +3,6 @@ package ws
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"go_chat/src/services"
 	"go_chat/src/types"
 	"log"
@@ -35,13 +34,11 @@ func (h *Hub) Run() {
 
 		case client := <-h.Register:
 			h.Clients[client.UserID] = client
-			fmt.Println("Client registered:", client.UserID)
 
 		case client := <-h.Unregister:
 			if _, ok := h.Clients[client.UserID]; ok {
 				delete(h.Clients, client.UserID)
 				close(client.Send)
-				fmt.Println("Client removed:", client.UserID)
 			}
 
 		case payload := <-h.Broadcast:
