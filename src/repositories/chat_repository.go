@@ -4,7 +4,6 @@ import (
 	"context"
 	"go_chat/src/dto"
 	"go_chat/src/models"
-	"log"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -24,7 +23,6 @@ func NewChatRepository(db *mongo.Database) *ChatRepository {
 func (r *ChatRepository) Create(ctx context.Context, chat *models.Chat) (*dto.ChatDTO, error) {
 	result, err := r.collection.InsertOne(ctx, chat)
 	if err != nil {
-		log.Print(err)
 		return nil, err
 	}
 

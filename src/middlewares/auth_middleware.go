@@ -25,7 +25,6 @@ func Protect(next http.HandlerFunc) http.HandlerFunc {
 			})
 
 			if err != nil {
-				log.Println(err)
 				http.Error(w, "Not authorized, token failed!", http.StatusUnauthorized)
 				return
 			}

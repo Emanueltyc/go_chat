@@ -78,7 +78,6 @@ func (c *UserController) Register(w http.ResponseWriter, r *http.Request) {
 
 	newUser, err := c.service.Register(context.Background(), user)
 	if err != nil {
-		log.Println(err)
 		w.WriteHeader(http.StatusUnauthorized)
 
 		json.NewEncoder(w).Encode(map[string]any{

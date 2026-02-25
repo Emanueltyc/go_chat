@@ -50,7 +50,6 @@ func (h *Hub) Run() {
 func (h *Hub) sendToChatMembers(payload *types.WebsocketMessage) {
 	users, err := h.ChatService.GetUsersID(context.Background(), payload.Message.Chat)
 	if err != nil {
-		log.Println(err)
 		return
 	}
 
@@ -60,7 +59,6 @@ func (h *Hub) sendToChatMembers(payload *types.WebsocketMessage) {
 
 	jsonPayload, err := json.Marshal(payload)
 	if err != nil {
-		log.Println("There was an error trying to serialize the message: ", err)
 		return
 	}
 

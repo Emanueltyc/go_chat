@@ -22,7 +22,6 @@ func NewUserRepository(db *mongo.Database) *UserRepository {
 func (r *UserRepository) Create(ctx context.Context, user *models.User) (*models.User, error) {
 	result, err := r.collection.InsertOne(ctx, user)
 	if err != nil {
-		log.Print(err)
 		return nil, err
 	}
 

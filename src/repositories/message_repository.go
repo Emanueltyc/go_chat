@@ -23,7 +23,6 @@ func NewMessageRepository(db *mongo.Database) *MessageRepository {
 func (r *MessageRepository) Create(ctx context.Context, message *models.Message) (*models.Message, error) {
 	result, err := r.collection.InsertOne(ctx, message)
 	if err != nil {
-		log.Print("There was an error trying to create the message (repository): ", err)
 		return nil, err
 	}
 
